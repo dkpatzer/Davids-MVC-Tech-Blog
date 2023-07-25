@@ -1,39 +1,16 @@
-// models/Post.js
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const { Sequelize, Model, DataTypes } = require('sequelize');
+const sequelize = require('../config/config');
 
-const Post = sequelize.define('Post', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
+class Post extends Model {}
+
+Post.init(
+  {
+    title: DataTypes.STRING,
+    body: DataTypes.STRING
   },
-  title: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  content: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: DataTypes.NOW,
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: DataTypes.NOW,
-  },
-  userId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: 'User',
-      key: 'id',
-    },
-  },
-});
+  {
+    sequelize
+  }
+);
 
 module.exports = Post;
