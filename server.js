@@ -3,11 +3,24 @@ const express = require('express');
 const session = require('express-session');
 const exphbs = require('express-handlebars');
 const helpers = require('./utils/helpers');
+const Sequelize = require('sequelize');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-const sequelize = require('./config/config');
+// Assuming Heroku provides a DATABASE_URL environment variable
+const { DATABASE_URL } = process.env;
+
+// Update the Sequelize constructor with the correct database URL
+const sequelize = new Sequelize(DATABASE_URL, {
+  dialect: 'mysql', // or any other supported database dialect
+  dialectOptions: {
+    ssl: {
+      rejectUnauthorized: false // If using SSL, set this to false
+    }
+  }
+});
+
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 const sess = {
@@ -25,7 +38,6 @@ const sess = {
   }),
 };
 
-
 app.use(session(sess));
 
 const hbs = exphbs.create({ helpers });
@@ -42,4 +54,4 @@ app.use(require('./controllers/'));
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}!`);
   sequelize.sync({ force: false });
-})
+});
