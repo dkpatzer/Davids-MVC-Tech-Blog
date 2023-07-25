@@ -16,7 +16,7 @@ const sess = {
     maxAge: 300000,
     httpOnly: true,
     secure: false,
-    sameSite: 'strict',
+ ;   sameSite: 'strict',
   },
   resave: false,
   saveUninitialized: true,
@@ -41,4 +41,4 @@ app.use(require('./controllers/'));
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}!`);
   sequelize.sync({ force: false });
-});
+})
