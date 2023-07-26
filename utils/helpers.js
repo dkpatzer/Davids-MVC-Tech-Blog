@@ -1,6 +1,6 @@
 
 
-// Example helper function to format a date using JavaScript's built-in Date object
+
 const formatDate = (date) => {
     return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
