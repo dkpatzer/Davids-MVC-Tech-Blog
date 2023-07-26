@@ -8,18 +8,32 @@ const Sequelize = require('sequelize');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Assuming Heroku provides a DATABASE_URL environment variable
-const { DATABASE_URL } = process.env;
+// Assuming you have the correct JAWSDB_URL for your MySQL database
+const JAWSDB_URL = 'mysql://smftij9ftnaxth8t:w96blpklbxpafzf5@acw2033ndw0at1t7.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/eyip5gvm17ijvpah';
 
-// Update the Sequelize constructor with the correct database URL
-const sequelize = new Sequelize(DATABASE_URL, {
-  dialect: 'mysql', // or any other supported database dialect
+if (!JAWSDB_URL) {
+  throw new Error('JAWSDB_URL environment variable is missing.');
+}
+
+// Update the Sequelize constructor with the correct database URL and dialect
+const sequelize = new Sequelize(JAWSDB_URL, {
+  dialect: 'mysql',
   dialectOptions: {
     ssl: {
-      rejectUnauthorized: false // If using SSL, set this to false
-    }
-  }
+      rejectUnauthorized: false,
+    },
+  },
 });
+
+// Test the database connection
+(async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('Connection to the database has been established successfully.');
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
+})();
 
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
@@ -51,7 +65,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(require('./controllers/'));
 
-app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}!`);
-  sequelize.sync({ force: false });
+// Add error handling middleware for any unhandled errors
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong!');
 });
+
+sequelize.sync({ force: false }).then(() => {
+  app.listen(PORT, () => {
+    console.log(`App listening on port ${PORT}!`);
+  });
+});
+
