@@ -15,7 +15,7 @@ If your README is long, add a table of contents to make it easy for users to fin
 - [License](#license)
 
 ## Installation
-I began by iinitializing the app and installing necessary dependencies. I t created the components for the header, footer, about me, portfolio, contact me and resume.  I then cre
+I began by iinitializing the app ( npm init -y) and installing necessary dependencies.  I made dotenv file and began working on the server.jsfile and the config file. Next I created the models and the routes. I made  views, controllers,a helper's, utils and the public folder, and their respective files, along with a gitignore file. I soent most of my time attempting to connect the routes and handlebars. 
 
 
 ## Usage
@@ -72,4 +72,17 @@ THEN I am able to view posts and comments but I am prompted to log in again befo
 The MCV Tech Blog was developed by David Patzer as part of the NU coding bootcamp. 
 
 I obtained information from many sources: 
+
+https://www.freecodecamp.org/news/the-model-view-controller-pattern-mvc-architecture-and-frameworks-explained/
+https://sequelize.org/
+https://www.npmjs.com/package/sequelize
+https://www.digitalocean.com/community/tutorials/how-to-use-sequelize-with-node-js-and-mysqlhttps://www.youtube.com/watch?v=YNyGD4rakmc
+https://developer.mozilla.org/en-US/docs/Glossary/MVC
+https://www.infoworld.com/article/3202764/the-complete-guide-to-nodejs-frameworks.html
+
+- https://chat.openai.com/: For text verification and assistance.
+
+- Finally, I got help from reviewing the answers to the challenge given in the NU coding bootcamp.
+
+
 
