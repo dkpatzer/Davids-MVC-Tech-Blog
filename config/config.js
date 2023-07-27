@@ -6,10 +6,10 @@ let sequelize;
 if (process.env.JAWSDB_URL) {
   sequelize = new Sequelize(process.env.JAWSDB_URL);
 } else {
-  sequelize = new Sequelize('mysql://smftij9ftnaxth8t:w96blpklbxpafzf5@acw2033ndw0at1t7.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/eyip5gvm17ijvpah', {
-    host: 'localhost',
-    dialect: 'mysql', // Specify the dialect here as a string
-    port: ''
+  sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
+    host: process.env.DB_HOST,
+    dialect: 'mysql',
+    port: process.env.DB_PORT
   });
 }
 
