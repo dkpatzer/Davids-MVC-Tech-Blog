@@ -1,71 +1,75 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
-//Bcrypt for password hashing
 const bcrypt = require('bcrypt');
 
+// create our User model
 class User extends Model {
-  checkPassword(loginPW) {
-    return bcrypt.compareSync(loginPW, this.password);
-  }
+    // set up method to run on instance data (per user) to check password
+    checkPassword(loginPw) {
+        return bcrypt.compareSync(loginPw, this.password);
+    }
 }
 
+// define table columns and configuration
 User.init(
+    {
+        // define an id column
+        id: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          primaryKey: true,
+          autoIncrement: true
+        },
+        // define a username column
+        username: {
+          type: DataTypes.STRING,
+          allowNull: false
+        },
+        twitter: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        github: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        // define an email column
+        email: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          unique: true,
+          validate: {
+            isEmail: true
+          }
+        },
+        // define a password column
+        password: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          validate: {
+            len: [4]
+          }
+        }
+      },
   {
-    //define ID column
-    id: {
-      // use Sequelize DataTypes object to provide type of data
-      type: DataTypes.INTEGER,
-
-      // equivalent of "NOT NULL" in  SQL
-      allowNull: false,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    //define Username column
-    username: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    //define password
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      // password must be at least five characters long
-      validate: {
-        len: [5],
-      },
-    },
-  },
-  {
-    //beforeCreate lifecycle "hook" functionality
-    // Add hooks for the password hashing operation
-    hooks: {
-      beforeCreate: async (newUserData) => {
-        // Sets up a beforeCreate lifecycle hook to hash the password before the object is created in the database
-        // & return the new userdata object
-        newUserData.password = await bcrypt.hash(newUserData.password, 10);
-        return newUserData;
+      hooks: {
+        // set up beforeCreate lifecycle "hook" functionality
+        async beforeCreate(newUserData) {
+            newUserData.password = await bcrypt.hash(newUserData.password, 10);
+            return newUserData;
+        },
+          // set up beforeUpdate lifecycle "hook" functionality
+        async beforeUpdate(updatedUserData) {
+            updatedUserData.password = await bcrypt.hash(updatedUserData.password, 10);
+            return updatedUserData;
+        }
       },
 
-      // beforeUpdate lifecycle "hook" functionality
-      // set up a beforeUpdate lifecycle hook to hash the password before a user object is updated in the database
-      async beforeUpdate(updatedUserData) {
-        updatedUserData.password = await bcrypt.hash(
-          updatedUserData.password,
-          10
-        );
-        return updatedUserData;
-      },
-    },
-
-    //imported sequelize connection (the direct connection to database)
     sequelize,
     timestamps: false,
-    // do not pluralize name of database table
     freezeTableName: true,
     underscored: true,
-    modelName: 'user',
+    modelName: 'user'
   }
 );
 
