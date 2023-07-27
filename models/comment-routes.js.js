@@ -3,7 +3,7 @@
 // Dependencies
 // sequelize model, datatypes, and database connection
 const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../config/config');
+const sequelize = require('../config/connection');
 
 // the Comment model extends the sequelize Model
 class Comment extends Model {}
