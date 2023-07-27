@@ -1,3 +1,4 @@
+
 // Import the Sequelize constructor from the library
 const Sequelize = require('sequelize');
 
@@ -17,5 +18,4 @@ if (process.env.JAWSDB_URL) {
 }
 
 module.exports = sequelize;
-
 

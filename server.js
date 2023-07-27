@@ -1,44 +1,45 @@
-const path = require("path");
-const express = require("express");
-const session = require("express-session");
-const exphbs = require("express-handlebars");
-
+// Import the required packages
+require('dotenv').config();
+const express = require('express');
+const routes = require('./controllers');
+const Sequelize = require('sequelize');
+const path = require('path');
+const helpers = require('./utils/helpers');
+const exphbs = require('express-handlebars');
+const hbs = exphbs.create({ helpers });
+const session = require('express-session');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-const sequelize = require("./config/config");
-const SequelizeStore = require('connect-session-sequelize')(session.Store);
+// Accessing the environment variables
+const dbName = process.env.DB_NAME;
+const dbUser = process.env.DB_USER;
+const dbPassword = process.env.DB_PASSWORD;
+const dbHost = process.env.DB_HOST;
 
-const sess = {
-    secret: "Super secret secret",
-    cookie: {},
-    resave: false,
-    saveUninitialized: true,
-    store: new SequelizeStore({
-        db: sequelize
-    })
-};
-
-app.use(session(sess));
-
-const hbs = exphbs.create({
-    helpers: {
-        format_date: date => {
-            return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
-        }
-    }
+// Create connection to the database using Sequelize
+const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
+  host: dbHost,
+  dialect: 'mysql',
+  port: 3306
 });
 
-app.engine("handlebars", hbs.engine);
-app.set("view engine", "handlebars");
+// ... (other imports and configurations)
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, "public")));
+app.engine('handlebars', hbs.engine);
+app.set('view engine', 'handlebars');
 
-app.use(require('./controllers/'));
+app.use(routes);
 
-app.listen(PORT, () => {
-    console.log(`App listening on port ${PORT}!`);
-    sequelize.sync({ force: false });
-});
+// turn on connection to db and server
+sequelize
+  .sync({ force: false })
+  .then(() => {
+    app.listen(PORT, () => console.log('Now listening'));
+  })
+  .catch((err) => {
+    console.error('Unable to connect to the database:', err);
+  });
+
+
+
