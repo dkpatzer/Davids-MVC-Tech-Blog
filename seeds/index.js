@@ -1,5 +1,3 @@
-const dotenv = require('dotenv');
-dotenv.config();
 const seedPosts = require('./post-seeds');
 const seedUsers = require('./user-seeds');
 const seedComments = require('./comment-seeds');

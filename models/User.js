@@ -38,6 +38,7 @@ User.init(
           type: DataTypes.STRING,
           allowNull: false,
           unique: true,
+          defaultValue: 'example@example.com',
           validate: {
             isEmail: true
           }
